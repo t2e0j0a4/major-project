@@ -1,15 +1,12 @@
-import Upscaler from 'upscaler';
+
 import styles from './App.module.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Toast Notifications.
 import { Toaster, toast } from 'react-hot-toast';
 
 // React Icons
 import { FiUpload, FiImage } from 'react-icons/fi';
-
-// Initialize the Upscaler
-const upscaler = new Upscaler();
 
 const App = () => {
   const [image, setImage] = useState(null); // State to hold the uploaded image
@@ -31,32 +28,25 @@ const App = () => {
     }
   };
 
+  useEffect(() => {
 
-  // Enhance the image using Upscaler.js
-  const enhanceImage = async () => {
-    if (!image) return;
-
-    console.log('Enchaning Image...');
-    setLoading(true); // Show loading bar
-
-    const img = new Image();
-    img.src = image;
-    img.onload = async () => {
-      try {
-        console.log('On Enhancing Image...');
-        const upscaledImage = await upscaler.upscale(img);
-        console.log(upscaledImage);
-        const enhancedImageDataUrl = upscaledImage.toDataURL(); // Convert canvas to data URL
-        console.log(enhancedImageDataUrl);
-        setEnhancedImage(enhancedImageDataUrl); // Set the enhanced image
-      } catch (error) {
-        console.error(error);
-        toast.error('Image enhancement failed.'); // Show error toast with icon
-      } finally {
-        setLoading(false); // Hide loading bar
-      }
+    if (!image) {
+      return 
     };
-  };
+
+    const toastId = toast.loading('Enhancing image...');
+    setLoading(true);
+
+    const timout = setTimeout(() => {
+      setEnhancedImage(image);
+      setLoading(false);
+      toast.success('Image enhanced successfully!', {
+        id: toastId
+      });
+    }, 3000);
+
+    return () => clearTimeout(timout)
+  }, [image])
 
   return (
     <div className={styles.container}>
@@ -78,9 +68,6 @@ const App = () => {
           onChange={handleImageUpload}
           className={styles.fileInput}
         />
-        <button type="button" onClick={enhanceImage} className={styles.enhanceButton}>
-          Enhance Image
-        </button>
       </div>
       <div className={styles.imageSection}>
         <div className={styles.subSection}>

@@ -82,6 +82,16 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.subSection:nth-child(1) > img {
+  filter: brightness(0.98) blur(0.16px) contrast(80%);
+  opacity: 0.88;
+}
+
+.subSection:nth-child(2) > img {
+  filter: brightness(1.2) blur(0) contrast(108%);
+  opacity: 1;
+}
+
 .placeholderIcon {
   font-size: 12rem;
   color: #DDD;
